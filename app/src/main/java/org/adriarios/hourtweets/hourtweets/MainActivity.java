@@ -1,9 +1,10 @@
 package org.adriarios.hourtweets.hourtweets;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.AppSession;
@@ -18,6 +19,10 @@ import com.twitter.sdk.android.core.models.Search;
 import com.twitter.sdk.android.core.models.Tweet;
 import com.twitter.sdk.android.tweetui.TweetView;
 
+import java.util.Calendar;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity {
@@ -27,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TWITTER_SECRET = "sWHwnn9jfZ0NB8C6rlyCAQdRFUyGSAZ3W7ygWTz4we8nwFRZEQ";
 
     private TwitterApiClient twitterApiClient;
+    private RelativeLayout tweetContainer;
 
 
     @Override
@@ -35,7 +41,34 @@ public class MainActivity extends AppCompatActivity {
         TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
         Fabric.with(this, new Twitter(authConfig));
         setContentView(R.layout.activity_main);
+        tweetContainer = (RelativeLayout) findViewById(R.id.tweetContainer);
         twitterApiClient = getTwitterApiClient();
+        timer();
+
+
+
+    }
+
+    public void timer(){
+        final Handler handler = new Handler();
+        Timer timer = new Timer();
+        TimerTask doAsynchronousTask = new TimerTask() {
+            @Override
+            public void run() {
+                handler.post(new Runnable() {
+                    @SuppressWarnings("unchecked")
+                    public void run() {
+                        try {
+                            getTwitterApiClient();
+                        }
+                        catch (Exception e) {
+                            // TODO Auto-generated catch block
+                        }
+                    }
+                });
+            }
+        };
+        timer.schedule(doAsynchronousTask, 0, 60000);
     }
 
     public TwitterApiClient getTwitterApiClient() {
@@ -43,15 +76,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void success(Result<AppSession> result) {
                 Log.d("STATICS", "loginGuest.callback.success called");
+                Calendar c = Calendar.getInstance();
+                int hour = c.get(Calendar.HOUR);
+                int hour_day = c.get(Calendar.HOUR_OF_DAY);
+                int minute = c.get(Calendar.MINUTE);
                 AppSession guestAppSession = result.data;
                 twitterApiClient = TwitterCore.getInstance().getApiClient(guestAppSession);
-                twitterApiClient.getSearchService().tweets("It's time 19:13", null, null, null, null, 50, null, null, null, true, new GuestCallback<>(new Callback<Search>() {
+                String hourStr = String.valueOf(hour_day) + ":" + String.valueOf(minute);
+                twitterApiClient.getSearchService().tweets("\""+hourStr+"\"", null, null, null, null, 50, null, null, null, true, new GuestCallback<>(new Callback<Search>() {
                     @Override
                     public void success(Result<Search> result) {
-                        final ViewGroup parentView = (ViewGroup) getWindow().getDecorView().getRootView();
+                        //ViewGroup parentView = (ViewGroup) findViewById(R.id.tweetView);
                         Tweet test = result.data.tweets.get(0);
                         TweetView tweetView = new TweetView(MainActivity.this, test);
-                        parentView.addView(tweetView);
+                        tweetContainer.addView(tweetView);
                         // use result tweets
                         Log.d("TwitterKit1", result.toString());
                     }
@@ -69,6 +107,8 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("STATICS", "loginGuest.callback.failure called");
                 // unable to get an AppSession with guest auth
                 throw exception;
+
+
             }
         });
 
