@@ -1,4 +1,4 @@
-package org.adriarios.hourtweets.hourtweets;
+package org.adriarios.hourtweets.hourtweets.presentation.activities;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,13 +19,21 @@ import com.twitter.sdk.android.core.models.Search;
 import com.twitter.sdk.android.core.models.Tweet;
 import com.twitter.sdk.android.tweetui.TweetView;
 
+import org.adriarios.hourtweets.hourtweets.R;
+import org.adriarios.hourtweets.hourtweets.di.App;
+import org.adriarios.hourtweets.hourtweets.presentation.presenters.TweetPresenter;
+
 import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.inject.Inject;
+
 import io.fabric.sdk.android.Fabric;
 
-public class MainActivity extends AppCompatActivity {
+public class TweetActivity extends AppCompatActivity {
+    @Inject
+    TweetPresenter tweetPresenter;
 
     // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
     private static final String TWITTER_KEY = "IMtfeDKDQWo0UbHbsI7P90vca";
@@ -38,12 +46,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((App) getApplication()).getObjectGraph().inject(this);
         TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
         Fabric.with(this, new Twitter(authConfig));
         setContentView(R.layout.activity_main);
         tweetContainer = (RelativeLayout) findViewById(R.id.tweetContainer);
         twitterApiClient = getTwitterApiClient();
         timer();
+
+        tweetPresenter.init(this);
 
 
 
@@ -88,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
                     public void success(Result<Search> result) {
                         //ViewGroup parentView = (ViewGroup) findViewById(R.id.tweetView);
                         Tweet test = result.data.tweets.get(0);
-                        TweetView tweetView = new TweetView(MainActivity.this, test);
+                        TweetView tweetView = new TweetView(TweetActivity.this, test);
                         tweetContainer.addView(tweetView);
                         // use result tweets
                         Log.d("TwitterKit1", result.toString());

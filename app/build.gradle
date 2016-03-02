@@ -41,4 +41,6 @@ dependencies {
     compile('com.twitter.sdk.android:twitter:1.12.1@aar') {
         transitive = true;
     }
+    compile 'com.squareup.dagger:dagger:1.2.2'
+    provided 'com.squareup.dagger:dagger-compiler:1.2.2'
 }
