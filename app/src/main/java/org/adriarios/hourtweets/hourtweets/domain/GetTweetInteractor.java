@@ -5,9 +5,9 @@ import android.util.Log;
 import java.util.Random;
 
 import rx.Observable;
+import rx.Observer;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -38,16 +38,11 @@ public class GetTweetInteractor implements IGetTweetInteractor {
 
     }
 
-    public void getNewTweet() {
+    public void getNewTweet(Observer<String> myObserver) {
         fetchFromGoogle
                 .subscribeOn(Schedulers.newThread()) // Create a new Thread
                 .observeOn(AndroidSchedulers.mainThread()) // Use the UI thread
-                .subscribe(new Action1<String>() {
-                    @Override
-                    public void call(String s) {
-                        Log.d("TwitterKit2", s);
-                    }
-                });
+                .subscribe(myObserver);
         Log.d("STATICS", "loginGuest.callback.success called");
     }
 }
