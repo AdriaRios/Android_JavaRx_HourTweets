@@ -20,6 +20,8 @@ public class TweetPresenter {
 
     public void init(TweetActivity tweetActivity) {
         tweetInteractor.getNewTweet();
+        tweetInteractor.getNewTweet();
+        tweetInteractor.getNewTweet();
 
     }
 }
