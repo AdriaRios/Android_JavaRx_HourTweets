@@ -2,22 +2,27 @@ package org.adriarios.hourtweets.hourtweets.domain;
 
 import android.util.Log;
 
+import org.adriarios.hourtweets.hourtweets.data.api.ITwitterApi;
+import org.adriarios.hourtweets.hourtweets.di.App;
+
 import java.util.Random;
+
+import javax.inject.Inject;
 
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by Adrian on 02/03/2016.
  */
 public class GetTweetInteractor implements IGetTweetInteractor {
+    @Inject
+    ITwitterApi twitterApi;
+    private Observable<String> fetchFromGoogle;
 
-    Observable<String> fetchFromGoogle;
-
-    public GetTweetInteractor() {
+    public GetTweetInteractor(App application) {
+        application.getObjectGraph().inject(this);
         fetchFromGoogle = Observable.create(new Observable.OnSubscribe<String>() {
             @Override
             public void call(Subscriber<? super String> subscriber) {
@@ -32,17 +37,14 @@ public class GetTweetInteractor implements IGetTweetInteractor {
                 }
             }
         });
-
-
-
-
     }
 
     public void getNewTweet(Observer<String> myObserver) {
-        fetchFromGoogle
+        /*fetchFromGoogle
                 .subscribeOn(Schedulers.newThread()) // Create a new Thread
                 .observeOn(AndroidSchedulers.mainThread()) // Use the UI thread
-                .subscribe(myObserver);
+                .subscribe(myObserver);*/
+        //twitterApi.getNewTweet();
         Log.d("STATICS", "loginGuest.callback.success called");
     }
 }

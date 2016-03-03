@@ -42,11 +42,6 @@ public class TweetPresenter {
             }
         };
         tweetInteractor.getNewTweet(myObserver);
-        tweetInteractor.getNewTweet(myObserver);
-        tweetInteractor.getNewTweet(myObserver);
     }
 
-    public void test(String str) {
-        Log.d("STATICS", "loginGuest.callback.failure called");
-    }
 }

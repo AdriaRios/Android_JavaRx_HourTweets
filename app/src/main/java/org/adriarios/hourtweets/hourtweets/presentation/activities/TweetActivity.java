@@ -1,45 +1,24 @@
 package org.adriarios.hourtweets.hourtweets.presentation.activities;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.RelativeLayout;
-
-import com.twitter.sdk.android.Twitter;
-import com.twitter.sdk.android.core.AppSession;
-import com.twitter.sdk.android.core.Callback;
-import com.twitter.sdk.android.core.GuestCallback;
-import com.twitter.sdk.android.core.Result;
-import com.twitter.sdk.android.core.TwitterApiClient;
-import com.twitter.sdk.android.core.TwitterAuthConfig;
-import com.twitter.sdk.android.core.TwitterCore;
-import com.twitter.sdk.android.core.TwitterException;
-import com.twitter.sdk.android.core.models.Search;
-import com.twitter.sdk.android.core.models.Tweet;
-import com.twitter.sdk.android.tweetui.TweetView;
 
 import org.adriarios.hourtweets.hourtweets.R;
 import org.adriarios.hourtweets.hourtweets.di.App;
 import org.adriarios.hourtweets.hourtweets.presentation.presenters.TweetPresenter;
 
-import java.util.Calendar;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import javax.inject.Inject;
-
-import io.fabric.sdk.android.Fabric;
 
 public class TweetActivity extends AppCompatActivity {
     @Inject
     TweetPresenter tweetPresenter;
 
     // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
-    private static final String TWITTER_KEY = "IMtfeDKDQWo0UbHbsI7P90vca";
-    private static final String TWITTER_SECRET = "sWHwnn9jfZ0NB8C6rlyCAQdRFUyGSAZ3W7ygWTz4we8nwFRZEQ";
+    /*private static final String TWITTER_KEY = "IMtfeDKDQWo0UbHbsI7P90vca";
+    private static final String TWITTER_SECRET = "sWHwnn9jfZ0NB8C6rlyCAQdRFUyGSAZ3W7ygWTz4we8nwFRZEQ";*/
 
-    private TwitterApiClient twitterApiClient;
+    //private TwitterApiClient twitterApiClient;
     private RelativeLayout tweetContainer;
 
 
@@ -47,12 +26,12 @@ public class TweetActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((App) getApplication()).getObjectGraph().inject(this);
-        TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
-        Fabric.with(this, new Twitter(authConfig));
+        /*TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
+        Fabric.with(this, new Twitter(authConfig));*/
         setContentView(R.layout.activity_main);
-        tweetContainer = (RelativeLayout) findViewById(R.id.tweetContainer);
-        twitterApiClient = getTwitterApiClient();
-        timer();
+        //tweetContainer = (RelativeLayout) findViewById(R.id.tweetContainer);
+        //twitterApiClient = getTwitterApiClient();
+        //timer();
 
         tweetPresenter.init(this);
 
@@ -60,7 +39,7 @@ public class TweetActivity extends AppCompatActivity {
 
     }
 
-    public void timer(){
+    /*public void timer(){
         final Handler handler = new Handler();
         Timer timer = new Timer();
         TimerTask doAsynchronousTask = new TimerTask() {
@@ -82,7 +61,7 @@ public class TweetActivity extends AppCompatActivity {
         timer.schedule(doAsynchronousTask, 0, 60000);
     }
 
-    public TwitterApiClient getTwitterApiClient() {
+    /*public TwitterApiClient getTwitterApiClient() {
         TwitterCore.getInstance().logInGuest(new Callback<AppSession>() {
             @Override
             public void success(Result<AppSession> result) {
@@ -124,5 +103,5 @@ public class TweetActivity extends AppCompatActivity {
         });
 
         return twitterApiClient;
-    }
+    }*/
 }
