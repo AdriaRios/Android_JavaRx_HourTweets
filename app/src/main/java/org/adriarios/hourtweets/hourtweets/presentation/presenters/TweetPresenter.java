@@ -2,6 +2,8 @@ package org.adriarios.hourtweets.hourtweets.presentation.presenters;
 
 import android.util.Log;
 
+import com.twitter.sdk.android.core.models.Tweet;
+
 import org.adriarios.hourtweets.hourtweets.di.App;
 import org.adriarios.hourtweets.hourtweets.domain.IGetTweetInteractor;
 import org.adriarios.hourtweets.hourtweets.presentation.activities.TweetActivity;
@@ -22,8 +24,8 @@ public class TweetPresenter {
         application.getObjectGraph().inject(this);
     }
 
-    public void init(TweetActivity tweetActivity) {
-        Observer<String> myObserver = new Observer<String>() {
+    public void init(final TweetActivity tweetActivity) {
+        Observer<Tweet> myObserver = new Observer<Tweet>() {
             @Override
             public void onCompleted() {
                 // Called when the observable has no more data to emit
@@ -36,12 +38,12 @@ public class TweetPresenter {
             }
 
             @Override
-            public void onNext(String s) {
+            public void onNext(Tweet tweet) {
                 // Called each time the observable emits data
-                Log.d("MY OBSERVER", s);
+                tweetActivity.showTweet(tweet);
             }
         };
-        tweetInteractor.getNewTweet(myObserver);
+        tweetInteractor.subscribe(myObserver);
     }
 
 }

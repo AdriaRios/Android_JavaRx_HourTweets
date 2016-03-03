@@ -1,7 +1,5 @@
 package org.adriarios.hourtweets.hourtweets.data.api;
 
-import android.util.Log;
-
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.AppSession;
 import com.twitter.sdk.android.core.Callback;
@@ -19,6 +17,11 @@ import org.adriarios.hourtweets.hourtweets.di.App;
 import java.util.Calendar;
 
 import io.fabric.sdk.android.Fabric;
+import rx.Observable;
+import rx.Observer;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by Adrian on 03/03/2016.
@@ -30,27 +33,51 @@ public class TwitterApi implements ITwitterApi {
     private TwitterApiClient twitterApiClient;
     private AppSession guestAppSession;
 
+    private Observable<String> fetchFromTwitterResponse;
+    private Observer<Object> twitterApiObserver;
+
     public TwitterApi(App application) {
         TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
         Fabric.with(application, new Twitter(authConfig));
-        twitterApiClient = getTwitterApiClient();
+
+        onSubscribe();
     }
 
-    private TwitterApiClient getTwitterApiClient() {
+    public void onSubscribe (){
+        fetchFromTwitterResponse = Observable.create(new Observable.OnSubscribe<String>() {
+            @Override
+            public void call(Subscriber<? super String> subscriber) {
+                try {
+                    twitterApiClient = getTwitterApiClient(subscriber);
+                }catch(Exception e){
+                    subscriber.onError(e); // In case there are network errors
+                }
+            }
+        });
+    }
+
+
+    @Override
+    public void subscribe(Observer<Object> observer) {
+        twitterApiObserver = observer;
+        fetchFromTwitterResponse
+        .subscribeOn(Schedulers.newThread()) // Create a new Thread
+                .observeOn(AndroidSchedulers.mainThread()) // Use the UI thread
+                .subscribe(observer);
+    }
+
+    private TwitterApiClient getTwitterApiClient(final Subscriber<? super String> subscriber) {
         TwitterCore.getInstance().logInGuest(new Callback<AppSession>() {
             @Override
             public void success(Result<AppSession> result) {
                 guestAppSession = result.data;
-                Log.d("STATICS", "loginGuest.callback.success called");
+                subscriber.onNext("OK"); // Emit the contents of the URL
+                subscriber.onCompleted(); // Nothing more to emit*/
             }
 
             @Override
             public void failure(TwitterException exception) {
-                Log.d("STATICS", "loginGuest.callback.failure called");
-                // unable to get an AppSession with guest auth
                 throw exception;
-
-
             }
         });
         return twitterApiClient;
@@ -66,18 +93,13 @@ public class TwitterApi implements ITwitterApi {
         twitterApiClient.getSearchService().tweets("\""+hourStr+"\"", null, null, null, "mixed", 50, null, null, null, true, new GuestCallback<>(new Callback<Search>() {
             @Override
             public void success(Result<Search> result) {
-                //ViewGroup parentView = (ViewGroup) findViewById(R.id.tweetView);
                 Tweet test = result.data.tweets.get(0);
-                //TweetView tweetView = new TweetView(TweetActivity.this, test);
-                //tweetContainer.addView(tweetView);
-                // use result tweets
-                Log.d("TwitterKit1", result.toString());
+                twitterApiObserver.onNext(test);
             }
 
             @Override
             public void failure(TwitterException exception) {
-                // handle exceptions
-                Log.d("TwitterKit2", exception.toString());
+
             }
         }));
     }
