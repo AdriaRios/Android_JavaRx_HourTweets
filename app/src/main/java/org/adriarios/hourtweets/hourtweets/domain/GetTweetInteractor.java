@@ -1,48 +1,55 @@
 package org.adriarios.hourtweets.hourtweets.domain;
 
-import android.util.Log;
+import org.adriarios.hourtweets.hourtweets.data.api.ITwitterApi;
+import org.adriarios.hourtweets.hourtweets.di.App;
 
-import java.util.Random;
+import javax.inject.Inject;
 
-import rx.Observable;
 import rx.Observer;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by Adrian on 02/03/2016.
  */
 public class GetTweetInteractor implements IGetTweetInteractor {
+    @Inject
+    ITwitterApi twitterApi;
 
-    Observable<String> fetchFromGoogle;
+    //Observable property to watch TwitterApi
+    private Observer<Object> twitterApiObserver;
 
-    public GetTweetInteractor() {
-        fetchFromGoogle = Observable.create(new Observable.OnSubscribe<String>() {
-            @Override
-            public void call(Subscriber<? super String> subscriber) {
-                try {
-                    Random rand = new Random();
-                    int  n = rand.nextInt(50) + 1;
-                    String data = "aaaaaa" + n;
-                    subscriber.onNext(data); // Emit the contents of the URL
-                    subscriber.onCompleted(); // Nothing more to emit
-                }catch(Exception e){
-                    subscriber.onError(e); // In case there are network errors
-                }
-            }
-        });
+    //Interactors observers
+    private Observer<Object> myObserver;
 
-
-
-
+    public GetTweetInteractor(App application) {
+        application.getObjectGraph().inject(this);
+        initObserver();
+        twitterApi.subscribe(twitterApiObserver);
     }
 
-    public void getNewTweet(Observer<String> myObserver) {
-        fetchFromGoogle
-                .subscribeOn(Schedulers.newThread()) // Create a new Thread
-                .observeOn(AndroidSchedulers.mainThread()) // Use the UI thread
-                .subscribe(myObserver);
-        Log.d("STATICS", "loginGuest.callback.success called");
+    private void initObserver() {
+        twitterApiObserver = new Observer<Object>() {
+            @Override
+            public void onCompleted() {
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(Object response) {
+                myObserver.onNext(response);
+            }
+        };
+    }
+
+    public void subscribe(Observer<Object> observer) {
+        myObserver = observer;
+    }
+
+    @Override
+    public void nextTweet() {
+        twitterApi.getNewTweet();
     }
 }

@@ -1,9 +1,13 @@
 package org.adriarios.hourtweets.hourtweets.di;
 
+import org.adriarios.hourtweets.hourtweets.data.api.ITwitterApi;
+import org.adriarios.hourtweets.hourtweets.data.api.TwitterApi;
 import org.adriarios.hourtweets.hourtweets.domain.GetTweetInteractor;
 import org.adriarios.hourtweets.hourtweets.domain.IGetTweetInteractor;
 import org.adriarios.hourtweets.hourtweets.presentation.activities.TweetActivity;
 import org.adriarios.hourtweets.hourtweets.presentation.presenters.TweetPresenter;
+
+import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
@@ -13,7 +17,8 @@ import dagger.Provides;
  */
 @Module(injects = {
         TweetActivity.class,
-        TweetPresenter.class
+        TweetPresenter.class,
+        GetTweetInteractor.class
 })
 public class AppDIModule {
     private App application;
@@ -29,7 +34,13 @@ public class AppDIModule {
 
     @Provides
     public IGetTweetInteractor providesTweetInteractor() {
-        return new GetTweetInteractor();
+        return new GetTweetInteractor(this.application);
+    }
+
+    @Provides
+    @Singleton
+    public ITwitterApi providesTwitterApi() {
+        return new TwitterApi(this.application);
     }
 
 }
