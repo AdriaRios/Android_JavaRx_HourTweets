@@ -1,5 +1,6 @@
 package org.adriarios.hourtweets.hourtweets.presentation.presenters;
 
+import android.os.Handler;
 import android.util.Log;
 
 import com.twitter.sdk.android.core.models.Tweet;
@@ -7,6 +8,9 @@ import com.twitter.sdk.android.core.models.Tweet;
 import org.adriarios.hourtweets.hourtweets.di.App;
 import org.adriarios.hourtweets.hourtweets.domain.IGetTweetInteractor;
 import org.adriarios.hourtweets.hourtweets.presentation.activities.TweetActivity;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.inject.Inject;
 
@@ -25,7 +29,7 @@ public class TweetPresenter {
     }
 
     public void init(final TweetActivity tweetActivity) {
-        Observer<Tweet> myObserver = new Observer<Tweet>() {
+        Observer<Object> myObserver = new Observer<Object>() {
             @Override
             public void onCompleted() {
                 // Called when the observable has no more data to emit
@@ -38,12 +42,39 @@ public class TweetPresenter {
             }
 
             @Override
-            public void onNext(Tweet tweet) {
+            public void onNext(Object response) {
                 // Called each time the observable emits data
-                tweetActivity.showTweet(tweet);
+                String type = response.getClass().getName();
+                if (type == "java.lang.String"){
+                    getTweetPerMinute();
+                }else{
+                    tweetActivity.showTweet((Tweet) response);
+                }
+
             }
         };
         tweetInteractor.subscribe(myObserver);
+    }
+
+    public void getTweetPerMinute(){
+        final Handler handler = new Handler();
+        Timer timer = new Timer();
+        TimerTask doAsynchronousTask = new TimerTask() {
+            @Override
+            public void run() {
+                handler.post(new Runnable() {
+                    @SuppressWarnings("unchecked")
+                    public void run() {
+                        try {
+                            tweetInteractor.nextTweet();
+                        } catch (Exception e) {
+                            // TODO Auto-generated catch block
+                        }
+                    }
+                });
+            }
+        };
+        timer.schedule(doAsynchronousTask, 0, 60000);
     }
 
 }

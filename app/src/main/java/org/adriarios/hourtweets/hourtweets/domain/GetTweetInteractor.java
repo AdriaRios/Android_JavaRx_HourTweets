@@ -1,7 +1,5 @@
 package org.adriarios.hourtweets.hourtweets.domain;
 
-import com.twitter.sdk.android.core.models.Tweet;
-
 import org.adriarios.hourtweets.hourtweets.data.api.ITwitterApi;
 import org.adriarios.hourtweets.hourtweets.di.App;
 
@@ -20,7 +18,7 @@ public class GetTweetInteractor implements IGetTweetInteractor {
     private Observer<Object> twitterApiObserver;
 
     //Interactors observers
-    private Observer<Tweet> myObserver;
+    private Observer<Object> myObserver;
 
     public GetTweetInteractor(App application) {
         application.getObjectGraph().inject(this);
@@ -28,10 +26,11 @@ public class GetTweetInteractor implements IGetTweetInteractor {
         twitterApi.subscribe(twitterApiObserver);
     }
 
-    private void initObserver(){
+    private void initObserver() {
         twitterApiObserver = new Observer<Object>() {
             @Override
-            public void onCompleted() {}
+            public void onCompleted() {
+            }
 
             @Override
             public void onError(Throwable e) {
@@ -39,19 +38,18 @@ public class GetTweetInteractor implements IGetTweetInteractor {
             }
 
             @Override
-            public void onNext(Object s) {
-                // Called each time the observable emits data
-                String type = s.getClass().getName();
-                if (type == "java.lang.String"){
-                    twitterApi.getNewTweet();
-                }else{
-                    myObserver.onNext((Tweet)s);
-                }
+            public void onNext(Object response) {
+                myObserver.onNext(response);
             }
         };
     }
 
-    public void subscribe(Observer<Tweet> observer) {
+    public void subscribe(Observer<Object> observer) {
         myObserver = observer;
+    }
+
+    @Override
+    public void nextTweet() {
+        twitterApi.getNewTweet();
     }
 }
