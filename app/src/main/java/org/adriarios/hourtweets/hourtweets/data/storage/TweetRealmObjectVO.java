@@ -10,11 +10,19 @@ public class TweetRealmObjectVO extends RealmObject {
     @Required // Id cannot be null
     private String id;
     private String userName;
-    private String userNick;
     private String date;
     private String text;
     private String imageURL;
-    private String tweetURL;
+
+    public int getTweetCount() {
+        return tweetCount;
+    }
+
+    public void setTweetCount(int tweetCount) {
+        this.tweetCount = tweetCount;
+    }
+
+    private int tweetCount;
 
     public String getId() {
         return id;
@@ -30,14 +38,6 @@ public class TweetRealmObjectVO extends RealmObject {
 
     public void setUserName(String userName) {
         this.userName = userName;
-    }
-
-    public String getUserNick() {
-        return userNick;
-    }
-
-    public void setUserNick(String userNick) {
-        this.userNick = userNick;
     }
 
     public String getDate() {
@@ -64,12 +64,5 @@ public class TweetRealmObjectVO extends RealmObject {
         this.imageURL = imageURL;
     }
 
-    public String getTweetURL() {
-        return tweetURL;
-    }
-
-    public void setTweetURL(String tweetURL) {
-        this.tweetURL = tweetURL;
-    }
 
 }

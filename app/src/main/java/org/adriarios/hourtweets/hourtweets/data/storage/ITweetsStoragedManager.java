@@ -6,5 +6,7 @@ import com.twitter.sdk.android.core.models.Tweet;
  * Created by Adrian on 04/03/2016.
  */
 public interface ITweetsStoragedManager {
-    void addNewTweetToLocalStorage(Tweet tweet);
+    void addNewTweetToLocalStorage(Tweet tweet, String currentTweetHour);
+
+    void getStoragedTweet(String hourStr);
 }

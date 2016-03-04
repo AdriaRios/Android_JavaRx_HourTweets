@@ -7,5 +7,5 @@ import rx.Observer;
  */
 public interface IGetTweetInteractor {
     void subscribe(Observer<Object> myObserver);
-    void nextTweet();
+    void nextTweet(String hourStr);
 }

@@ -20,6 +20,8 @@ public class GetTweetInteractor implements IGetTweetInteractor {
     @Inject
     ITweetsStoragedManager tweetsStoragedManager;
 
+    private String currentTweetHour;
+
     //Observable property to watch TwitterApi
     private Observer<Object> twitterApiObserver;
 
@@ -47,7 +49,7 @@ public class GetTweetInteractor implements IGetTweetInteractor {
             public void onNext(Object response) {
                 String type = response.getClass().getName();
                 if (type != "java.lang.String"){
-                    tweetsStoragedManager.addNewTweetToLocalStorage((Tweet)response);
+                    tweetsStoragedManager.addNewTweetToLocalStorage((Tweet)response, currentTweetHour);
                 }
                 myObserver.onNext(response);
             }
@@ -59,7 +61,9 @@ public class GetTweetInteractor implements IGetTweetInteractor {
     }
 
     @Override
-    public void nextTweet() {
-        twitterApi.getNewTweet();
+    public void nextTweet(String hourStr) {
+        currentTweetHour = hourStr;
+        tweetsStoragedManager.getStoragedTweet(hourStr);
+        twitterApi.getNewTweet(hourStr);
     }
 }

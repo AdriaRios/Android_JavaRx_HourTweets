@@ -9,6 +9,7 @@ import org.adriarios.hourtweets.hourtweets.di.App;
 import org.adriarios.hourtweets.hourtweets.domain.IGetTweetInteractor;
 import org.adriarios.hourtweets.hourtweets.presentation.activities.TweetActivity;
 
+import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -66,7 +67,12 @@ public class TweetPresenter {
                     @SuppressWarnings("unchecked")
                     public void run() {
                         try {
-                            tweetInteractor.nextTweet();
+                            Calendar c = Calendar.getInstance();
+                            int hour = c.get(Calendar.HOUR);
+                            int hour_day = c.get(Calendar.HOUR_OF_DAY);
+                            int minute = c.get(Calendar.MINUTE);
+                            String hourStr = String.valueOf(hour_day) + ":" + String.valueOf(minute);
+                            tweetInteractor.nextTweet(hourStr);
                         } catch (Exception e) {
                             // TODO Auto-generated catch block
                         }

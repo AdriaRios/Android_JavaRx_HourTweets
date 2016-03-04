@@ -83,13 +83,9 @@ public class TwitterApi implements ITwitterApi {
         return twitterApiClient;
     }
 
-    public void getNewTweet(){
-        Calendar c = Calendar.getInstance();
-        int hour = c.get(Calendar.HOUR);
-        int hour_day = c.get(Calendar.HOUR_OF_DAY);
-        int minute = c.get(Calendar.MINUTE);
+    public void getNewTweet(String hourStr){
+
         twitterApiClient = TwitterCore.getInstance().getApiClient(guestAppSession);
-        String hourStr = String.valueOf(hour_day) + ":" + String.valueOf(minute);
         twitterApiClient.getSearchService().tweets("\""+hourStr+"\"", null, null, null, "mixed", 50, null, null, null, true, new GuestCallback<>(new Callback<Search>() {
             @Override
             public void success(Result<Search> result) {
