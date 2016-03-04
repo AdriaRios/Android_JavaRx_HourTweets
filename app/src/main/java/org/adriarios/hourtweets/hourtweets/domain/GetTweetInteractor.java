@@ -1,6 +1,9 @@
 package org.adriarios.hourtweets.hourtweets.domain;
 
+import com.twitter.sdk.android.core.models.Tweet;
+
 import org.adriarios.hourtweets.hourtweets.data.api.ITwitterApi;
+import org.adriarios.hourtweets.hourtweets.data.storage.ITweetsStoragedManager;
 import org.adriarios.hourtweets.hourtweets.di.App;
 
 import javax.inject.Inject;
@@ -13,6 +16,9 @@ import rx.Observer;
 public class GetTweetInteractor implements IGetTweetInteractor {
     @Inject
     ITwitterApi twitterApi;
+
+    @Inject
+    ITweetsStoragedManager tweetsStoragedManager;
 
     //Observable property to watch TwitterApi
     private Observer<Object> twitterApiObserver;
@@ -39,6 +45,10 @@ public class GetTweetInteractor implements IGetTweetInteractor {
 
             @Override
             public void onNext(Object response) {
+                String type = response.getClass().getName();
+                if (type != "java.lang.String"){
+                    tweetsStoragedManager.addNewTweetToLocalStorage((Tweet)response);
+                }
                 myObserver.onNext(response);
             }
         };

@@ -2,6 +2,8 @@ package org.adriarios.hourtweets.hourtweets.di;
 
 import org.adriarios.hourtweets.hourtweets.data.api.ITwitterApi;
 import org.adriarios.hourtweets.hourtweets.data.api.TwitterApi;
+import org.adriarios.hourtweets.hourtweets.data.storage.ITweetsStoragedManager;
+import org.adriarios.hourtweets.hourtweets.data.storage.TweetsStoragedManager;
 import org.adriarios.hourtweets.hourtweets.domain.GetTweetInteractor;
 import org.adriarios.hourtweets.hourtweets.domain.IGetTweetInteractor;
 import org.adriarios.hourtweets.hourtweets.presentation.activities.TweetActivity;
@@ -41,6 +43,12 @@ public class AppDIModule {
     @Singleton
     public ITwitterApi providesTwitterApi() {
         return new TwitterApi(this.application);
+    }
+
+    @Provides
+    @Singleton
+    public ITweetsStoragedManager providesTweetsStoragedManager() {
+        return new TweetsStoragedManager(this.application);
     }
 
 }

@@ -93,8 +93,8 @@ public class TwitterApi implements ITwitterApi {
         twitterApiClient.getSearchService().tweets("\""+hourStr+"\"", null, null, null, "mixed", 50, null, null, null, true, new GuestCallback<>(new Callback<Search>() {
             @Override
             public void success(Result<Search> result) {
-                Tweet test = result.data.tweets.get(0);
-                twitterApiObserver.onNext(test);
+                Tweet tweet = result.data.tweets.get(0);
+                twitterApiObserver.onNext(tweet);
             }
 
             @Override
