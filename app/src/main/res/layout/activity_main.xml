@@ -49,29 +49,15 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="\@iruizpe"
-            android:id="@+id/userNick"
-            android:layout_below="@+id/userName"
-            android:layout_alignLeft="@+id/userName"
-            android:layout_alignStart="@+id/userName" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Textaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-                aaaaaaaaaaaaaaaaaaaaaaaaaaa
-                iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
-                iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
-                iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii"
+            android:text=""
             android:id="@+id/tweetDesc"
-            android:layout_below="@+id/userNick"
-            android:layout_alignLeft="@+id/userNick"
-            android:layout_alignStart="@+id/userNick"
+            android:layout_below="@+id/userName"
+            android:layout_alignLeft="@+id/userName"
+            android:layout_alignStart="@+id/userName"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_above="@+id/tweetDate" />
@@ -80,7 +66,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="101010101"
+            android:text=""
             android:id="@+id/tweetDate"
             android:layout_above="@+id/tweetRetweets"
             android:layout_alignLeft="@+id/tweetDesc"
@@ -90,7 +76,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="1 Retweet"
+            android:text="aaaaa"
             android:id="@+id/tweetRetweets"
             android:layout_alignParentBottom="true"
             android:layout_alignLeft="@+id/tweetDate"
@@ -99,10 +85,19 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/imageView"
+            android:background="@drawable/twitter"
+            android:id="@+id/twitterIcon"
             android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_toLeftOf="@+id/tweetDesc"
+            android:layout_toStartOf="@+id/tweetDesc" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/retweet"
+            android:id="@+id/retweetIcon"
+            android:layout_alignParentBottom="true"
+            android:layout_alignRight="@+id/twitterIcon"
+            android:layout_alignEnd="@+id/twitterIcon" />
     </RelativeLayout>
 
 

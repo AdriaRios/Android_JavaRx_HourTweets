@@ -39,6 +39,7 @@ public class TweetActivity extends AppCompatActivity {
     private TextView tweetRetweets;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
