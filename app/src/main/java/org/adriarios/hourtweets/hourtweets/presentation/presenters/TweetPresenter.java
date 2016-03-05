@@ -25,8 +25,9 @@ public class TweetPresenter {
     IGetTweetInteractor tweetInteractor;
 
 
-    public TweetPresenter(App application){
+    public TweetPresenter(App application) {
         application.getObjectGraph().inject(this);
+        getTweetPerMinute();
     }
 
     public void init(final TweetActivity tweetActivity) {
@@ -34,7 +35,7 @@ public class TweetPresenter {
             @Override
             public void onCompleted() {
                 // Called when the observable has no more data to emit
-                Log.d("MY OBSERVER","d");
+                Log.d("MY OBSERVER", "d");
             }
 
             @Override
@@ -44,20 +45,14 @@ public class TweetPresenter {
 
             @Override
             public void onNext(Object response) {
-                // Called each time the observable emits data
-                String type = response.getClass().getName();
-                if (type == "java.lang.String"){
-                    getTweetPerMinute();
-                }else{
-                    tweetActivity.showTweet((Tweet) response);
-                }
-
+//                String type = response.getClass().getName();
+                tweetActivity.showTweet((Tweet) response);
             }
         };
         tweetInteractor.subscribe(myObserver);
     }
 
-    public void getTweetPerMinute(){
+    public void getTweetPerMinute() {
         final Handler handler = new Handler();
         Timer timer = new Timer();
         TimerTask doAsynchronousTask = new TimerTask() {
@@ -74,6 +69,7 @@ public class TweetPresenter {
                             String hourStr = String.valueOf(hour_day) + ":" + String.valueOf(minute);
                             tweetInteractor.nextTweet(hourStr);
                         } catch (Exception e) {
+                            Log.d("MY OBSERVER", "d");
                             // TODO Auto-generated catch block
                         }
                     }

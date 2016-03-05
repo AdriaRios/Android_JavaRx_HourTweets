@@ -5,6 +5,7 @@ import com.twitter.sdk.android.core.models.Tweet;
 import org.adriarios.hourtweets.hourtweets.data.api.ITwitterApi;
 import org.adriarios.hourtweets.hourtweets.data.storage.ITweetsStoragedManager;
 import org.adriarios.hourtweets.hourtweets.di.App;
+import org.adriarios.hourtweets.hourtweets.utils.Utils;
 
 import javax.inject.Inject;
 
@@ -20,6 +21,9 @@ public class GetTweetInteractor implements IGetTweetInteractor {
     @Inject
     ITweetsStoragedManager tweetsStoragedManager;
 
+    @Inject
+    Utils utils;
+
     private String currentTweetHour;
 
     //Observable property to watch TwitterApi
@@ -31,7 +35,6 @@ public class GetTweetInteractor implements IGetTweetInteractor {
     public GetTweetInteractor(App application) {
         application.getObjectGraph().inject(this);
         initObserver();
-        twitterApi.subscribe(twitterApiObserver);
     }
 
     private void initObserver() {
@@ -47,10 +50,8 @@ public class GetTweetInteractor implements IGetTweetInteractor {
 
             @Override
             public void onNext(Object response) {
-                String type = response.getClass().getName();
-                if (type != "java.lang.String"){
-                    tweetsStoragedManager.addNewTweetToLocalStorage((Tweet)response, currentTweetHour);
-                }
+//                String type = response.getClass().getName();
+                tweetsStoragedManager.addNewTweetToLocalStorage((Tweet)response, currentTweetHour);
                 myObserver.onNext(response);
             }
         };
@@ -63,7 +64,16 @@ public class GetTweetInteractor implements IGetTweetInteractor {
     @Override
     public void nextTweet(String hourStr) {
         currentTweetHour = hourStr;
-        tweetsStoragedManager.getStoragedTweet(hourStr);
-        twitterApi.getNewTweet(hourStr);
+        if(utils.isNetworkAvailable()){
+            if(twitterApi.isTwitterApiInitialized()){
+                twitterApi.getNewTweet(hourStr);
+            }else{
+                twitterApi.initApi();
+                twitterApi.subscribe(twitterApiObserver);
+            }
+        }else{
+            tweetsStoragedManager.getStoragedTweet(hourStr);
+        }
+
     }
 }

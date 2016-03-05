@@ -9,4 +9,8 @@ public interface ITwitterApi {
     void getNewTweet(String hourStr);
 
     void subscribe(Observer<Object> twitterApiObserver);
+
+    void initApi();
+
+    Boolean isTwitterApiInitialized();
 }

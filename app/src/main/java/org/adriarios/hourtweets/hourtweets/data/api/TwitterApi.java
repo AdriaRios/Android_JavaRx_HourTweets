@@ -14,8 +14,6 @@ import com.twitter.sdk.android.core.models.Tweet;
 
 import org.adriarios.hourtweets.hourtweets.di.App;
 
-import java.util.Calendar;
-
 import io.fabric.sdk.android.Fabric;
 import rx.Observable;
 import rx.Observer;
@@ -36,20 +34,29 @@ public class TwitterApi implements ITwitterApi {
     private Observable<String> fetchFromTwitterResponse;
     private Observer<Object> twitterApiObserver;
 
-    public TwitterApi(App application) {
-        TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
-        Fabric.with(application, new Twitter(authConfig));
+    private App context;
 
+    public TwitterApi(App application) {
+        context = application;
+    }
+
+    public void initApi(){
+        TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
+        Fabric.with(context, new Twitter(authConfig));
         onSubscribe();
     }
 
-    public void onSubscribe (){
+    public Boolean isTwitterApiInitialized() {
+        return twitterApiClient != null;
+    }
+
+    public void onSubscribe() {
         fetchFromTwitterResponse = Observable.create(new Observable.OnSubscribe<String>() {
             @Override
             public void call(Subscriber<? super String> subscriber) {
                 try {
                     twitterApiClient = getTwitterApiClient(subscriber);
-                }catch(Exception e){
+                } catch (Exception e) {
                     subscriber.onError(e); // In case there are network errors
                 }
             }
@@ -61,7 +68,7 @@ public class TwitterApi implements ITwitterApi {
     public void subscribe(Observer<Object> observer) {
         twitterApiObserver = observer;
         fetchFromTwitterResponse
-        .subscribeOn(Schedulers.newThread()) // Create a new Thread
+                .subscribeOn(Schedulers.newThread()) // Create a new Thread
                 .observeOn(AndroidSchedulers.mainThread()) // Use the UI thread
                 .subscribe(observer);
     }
@@ -83,10 +90,10 @@ public class TwitterApi implements ITwitterApi {
         return twitterApiClient;
     }
 
-    public void getNewTweet(String hourStr){
+    public void getNewTweet(String hourStr) {
 
         twitterApiClient = TwitterCore.getInstance().getApiClient(guestAppSession);
-        twitterApiClient.getSearchService().tweets("\""+hourStr+"\"", null, null, null, "mixed", 50, null, null, null, true, new GuestCallback<>(new Callback<Search>() {
+        twitterApiClient.getSearchService().tweets("\"" + hourStr + "\"", null, null, null, "mixed", 50, null, null, null, true, new GuestCallback<>(new Callback<Search>() {
             @Override
             public void success(Result<Search> result) {
                 Tweet tweet = result.data.tweets.get(0);

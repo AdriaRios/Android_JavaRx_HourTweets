@@ -8,6 +8,7 @@ import org.adriarios.hourtweets.hourtweets.domain.GetTweetInteractor;
 import org.adriarios.hourtweets.hourtweets.domain.IGetTweetInteractor;
 import org.adriarios.hourtweets.hourtweets.presentation.activities.TweetActivity;
 import org.adriarios.hourtweets.hourtweets.presentation.presenters.TweetPresenter;
+import org.adriarios.hourtweets.hourtweets.utils.Utils;
 
 import javax.inject.Singleton;
 
@@ -49,6 +50,12 @@ public class AppDIModule {
     @Singleton
     public ITweetsStoragedManager providesTweetsStoragedManager() {
         return new TweetsStoragedManager(this.application);
+    }
+
+    @Provides
+    @Singleton
+    public Utils providesUtils() {
+        return new Utils(this.application);
     }
 
 }
