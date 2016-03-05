@@ -12,15 +12,25 @@ import org.adriarios.hourtweets.hourtweets.di.App;
 public class Utils {
     App _application;
 
-    public Utils(App application){
+    public Utils(App application) {
         _application = application;
     }
 
-    public  boolean isNetworkAvailable() {
+    public boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) _application.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null;
+    }
+
+    public String paddingZero(int number) {
+        String result;
+        if (number < 10) {
+            result = "0" + String.valueOf(number);
+        }else{
+            result = String.valueOf(number);
+        }
+        return result;
     }
 
 }

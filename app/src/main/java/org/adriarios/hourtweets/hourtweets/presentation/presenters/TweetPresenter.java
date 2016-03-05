@@ -9,6 +9,7 @@ import org.adriarios.hourtweets.hourtweets.data.storage.TweetRealmObjectVO;
 import org.adriarios.hourtweets.hourtweets.di.App;
 import org.adriarios.hourtweets.hourtweets.domain.IGetTweetInteractor;
 import org.adriarios.hourtweets.hourtweets.presentation.activities.TweetActivity;
+import org.adriarios.hourtweets.hourtweets.utils.Utils;
 
 import java.util.Calendar;
 import java.util.Timer;
@@ -24,6 +25,8 @@ import rx.Observer;
 public class TweetPresenter {
     @Inject
     IGetTweetInteractor tweetInteractor;
+    @Inject
+    Utils utils;
 
     private static final String TWEET_ONLINE = "com.twitter.sdk.android.core.models.Tweet";
     private static final String TWEET_OFFLINE = "io.realm.TweetRealmObjectVORealmProxy";
@@ -94,8 +97,8 @@ public class TweetPresenter {
                             Calendar c = Calendar.getInstance();
                             int hour = c.get(Calendar.HOUR);
                             int hour_day = c.get(Calendar.HOUR_OF_DAY);
-                            int minute = c.get(Calendar.MINUTE);
-                            String hourStr = String.valueOf(hour_day) + ":" + String.valueOf(minute);
+                            String minute = utils.paddingZero(c.get(Calendar.MINUTE));
+                            String hourStr = String.valueOf(hour_day) + "::" + minute;
                             tweetInteractor.nextTweet(hourStr);
                         } catch (Exception e) {
                             Log.d("MY OBSERVER", "d");
