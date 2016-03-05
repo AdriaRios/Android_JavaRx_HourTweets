@@ -88,7 +88,7 @@ public class TweetActivity extends AppCompatActivity {
         userNick.setText(tweetOffline.getUserName());
         tweetDesc.setText(tweetOffline.getText());
         tweetDate.setText(tweetOffline.getDate());
-        tweetRetweets.setText(tweetOffline.getTweetCount());
+        tweetRetweets.setText(String.valueOf(tweetOffline.getTweetCount()) + " Retweets");
     }
 
     public void showNotFoundMessage() {

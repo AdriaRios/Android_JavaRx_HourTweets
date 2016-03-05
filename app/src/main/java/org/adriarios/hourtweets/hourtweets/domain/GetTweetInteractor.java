@@ -75,7 +75,7 @@ public class GetTweetInteractor implements IGetTweetInteractor {
 
     @Override
     public void nextTweet(String hourStr) {
-        //hourStr = "10:10";
+        hourStr = "10:00";
         //hourStr = "14:44";
         currentTweetHour = hourStr;
         if (utils.isNetworkAvailable()) {

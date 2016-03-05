@@ -14,6 +14,8 @@ import com.twitter.sdk.android.core.models.Tweet;
 
 import org.adriarios.hourtweets.hourtweets.di.App;
 
+import java.util.List;
+
 import io.fabric.sdk.android.Fabric;
 import rx.Observable;
 import rx.Observer;
@@ -68,8 +70,8 @@ public class TwitterApi implements ITwitterApi {
     }
 
     public void getNewTweet(String hourStr) {
-        String query = "\"It's " + hourStr + " and\"";
-        //String query = hourStr;
+        //String query = "\"It's " + hourStr + " and\"";
+        String query = hourStr;
         twitterApiClient = TwitterCore.getInstance().getApiClient(guestAppSession);
         twitterApiClient.getSearchService().tweets(
                 query, null, null, null, "mixed", 50, null, null, null, true, new GuestCallback<>(new Callback<Search>() {
@@ -77,7 +79,8 @@ public class TwitterApi implements ITwitterApi {
                     public void success(Result<Search> result) {
                         Tweet tweet = null;
                         if (result.data.tweets.size() > 0) {
-                            tweet = result.data.tweets.get(0);
+                            getMoreRetweetedTweet(result.data.tweets);
+                            tweet = getMoreRetweetedTweet(result.data.tweets);
                         }
                         twitterApiObserver.onNext(tweet);
                     }
@@ -87,6 +90,16 @@ public class TwitterApi implements ITwitterApi {
                         twitterApiObserver.onError(null);
                     }
                 }));
+    }
+
+    private Tweet getMoreRetweetedTweet(List<Tweet> tweets){
+        Tweet moreRetweetedTweet = tweets.get(0);
+        for (int i = 1; i < tweets.size(); i++) {
+            if (tweets.get(i).retweetCount > moreRetweetedTweet.retweetCount){
+                moreRetweetedTweet = tweets.get(i);
+            }
+        }
+        return moreRetweetedTweet;
     }
 
     public void onSubscribe() {
