@@ -33,7 +33,6 @@ public class TweetActivity extends AppCompatActivity {
 
     //Offline elements
     private TextView userName;
-    private TextView userNick;
     private TextView tweetDesc;
     private TextView tweetDate;
     private TextView tweetRetweets;
@@ -54,7 +53,6 @@ public class TweetActivity extends AppCompatActivity {
         tweetOffLineContainer = (RelativeLayout) findViewById(R.id.tweetOffLineContainer);
 
         userName = (TextView) findViewById(R.id.userName);
-        userNick = (TextView) findViewById(R.id.userNick);
         tweetDesc = (TextView) findViewById(R.id.tweetDesc);
         tweetDate = (TextView) findViewById(R.id.tweetDate);
         tweetRetweets = (TextView) findViewById(R.id.tweetRetweets);
@@ -86,7 +84,6 @@ public class TweetActivity extends AppCompatActivity {
         tweetOffLineContainer.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.GONE);
         userName.setText(tweetOffline.getUserName());
-        userNick.setText(tweetOffline.getUserName());
         tweetDesc.setText(tweetOffline.getText());
         tweetDate.setText(tweetOffline.getDate());
         tweetRetweets.setText(String.valueOf(tweetOffline.getTweetCount()) + " Retweets");
