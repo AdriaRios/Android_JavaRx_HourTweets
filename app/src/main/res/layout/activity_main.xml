@@ -10,22 +10,21 @@
     android:background="@android:color/black"
     tools:context=".presentation.activities.TweetActivity">
 
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:layout_below="@+id/headerText"
+        android:layout_centerHorizontal="true" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="400dp"
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:background="@android:color/holo_blue_bright"
         android:id="@+id/tweetOnlineContainer" >
-
-        <ProgressBar
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/progressBar"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
     </RelativeLayout>
 
     <RelativeLayout
