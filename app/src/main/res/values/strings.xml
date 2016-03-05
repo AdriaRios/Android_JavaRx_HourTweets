@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Hour Tweets</string>
+
+    <string name="loading_tweets">LOADING TWEETS</string>
+    <string name="tweet_online">TWEET ONLINE</string>
+    <string name="tweet_offline">TWEET OFFLINE</string>
+    <string name="no_tweets">NO TWEETS FOUND FOR THE CURRENT TIME</string>
 </resources>

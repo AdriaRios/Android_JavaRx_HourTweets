@@ -62,14 +62,14 @@ public class TweetActivity extends AppCompatActivity {
     }
 
     private void initView(){
-        headerText.setText("LOADING TWEETS");
+        headerText.setText(R.string.loading_tweets);
         progressBar.setVisibility(View.VISIBLE);
         tweetOnlineContainer.setVisibility(View.GONE);
         tweetOffLineContainer.setVisibility(View.GONE);
     }
 
     public void showOnlineTweet(Tweet tweet) {
-        headerText.setText("TWEET ONLINE");
+        headerText.setText(R.string.tweet_online);
         tweetOnlineContainer.setVisibility(View.VISIBLE);
         tweetOffLineContainer.setVisibility(View.GONE);
         progressBar.setVisibility(View.GONE);
@@ -79,7 +79,7 @@ public class TweetActivity extends AppCompatActivity {
     }
 
     public void showOfflineTweet(TweetRealmObjectVO tweetOffline) {
-        headerText.setText("TWEET OFFLINE");
+        headerText.setText(R.string.tweet_offline);
         tweetOnlineContainer.setVisibility(View.GONE);
         tweetOffLineContainer.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.GONE);
@@ -90,7 +90,7 @@ public class TweetActivity extends AppCompatActivity {
     }
 
     public void showNotFoundMessage() {
-        headerText.setText("NO TWEETS FOUND FOR THE CURRENT TIME");
+        headerText.setText(R.string.no_tweets);
         tweetOnlineContainer.setVisibility(View.GONE);
         tweetOffLineContainer.setVisibility(View.GONE);
         progressBar.setVisibility(View.GONE);

@@ -105,7 +105,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Mode OFF LINE"
+        android:text="@string/tweet_offline"
         android:id="@+id/headerText"
         android:textColor="@android:color/white"
         android:layout_alignParentTop="true"
