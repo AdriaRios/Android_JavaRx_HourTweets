@@ -25,6 +25,8 @@ public class GetTweetInteractor implements IGetTweetInteractor {
     @Inject
     Utils utils;
 
+    private static final String STRING_TYPE = "java.lang.String";
+
     private String currentTweetHour;
 
     //Observable property to watch TwitterApi
@@ -47,16 +49,20 @@ public class GetTweetInteractor implements IGetTweetInteractor {
 
             @Override
             public void onError(Throwable e) {
-
+                myObserver.onNext(null);
             }
 
             @Override
             public void onNext(Object response) {
-                String type = response.getClass().getName();
-                if (type != "java.lang.String"){
-                    tweetsStoragedManager.addNewTweetToLocalStorage((Tweet)response, currentTweetHour);
-                }else{
-                    twitterApi.getNewTweet(currentTweetHour);
+                if (response != null) {
+                    String type = response.getClass().getName();
+                    if (type != STRING_TYPE) {
+                        //When receives new Twitter
+                        tweetsStoragedManager.addNewTweetToLocalStorage((Tweet) response, currentTweetHour);
+                    } else {
+                        //When TwitterApi is ready
+                        twitterApi.getNewTweet(currentTweetHour);
+                    }
                 }
                 myObserver.onNext(response);
             }
@@ -69,15 +75,17 @@ public class GetTweetInteractor implements IGetTweetInteractor {
 
     @Override
     public void nextTweet(String hourStr) {
+        //hourStr = "10:10";
+        //hourStr = "14:44";
         currentTweetHour = hourStr;
-        if(utils.isNetworkAvailable()){
-            if(twitterApi.isTwitterApiInitialized()){
+        if (utils.isNetworkAvailable()) {
+            if (twitterApi.isTwitterApiInitialized()) {
                 twitterApi.getNewTweet(hourStr);
-            }else{
+            } else {
                 twitterApi.initApi();
                 twitterApi.subscribe(twitterApiObserver);
             }
-        }else{
+        } else {
             TweetRealmObjectVO tweetOffLine = tweetsStoragedManager.getStoragedTweet(hourStr);
             myObserver.onNext(tweetOffLine);
         }

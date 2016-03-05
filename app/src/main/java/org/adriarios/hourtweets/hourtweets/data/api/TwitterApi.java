@@ -68,19 +68,25 @@ public class TwitterApi implements ITwitterApi {
     }
 
     public void getNewTweet(String hourStr) {
+        String query = "\"It's " + hourStr + " and\"";
+        //String query = hourStr;
         twitterApiClient = TwitterCore.getInstance().getApiClient(guestAppSession);
-        twitterApiClient.getSearchService().tweets("\"" + hourStr + "\"", null, null, null, "mixed", 50, null, null, null, true, new GuestCallback<>(new Callback<Search>() {
-            @Override
-            public void success(Result<Search> result) {
-                Tweet tweet = result.data.tweets.get(0);
-                twitterApiObserver.onNext(tweet);
-            }
+        twitterApiClient.getSearchService().tweets(
+                query, null, null, null, "mixed", 50, null, null, null, true, new GuestCallback<>(new Callback<Search>() {
+                    @Override
+                    public void success(Result<Search> result) {
+                        Tweet tweet = null;
+                        if (result.data.tweets.size() > 0) {
+                            tweet = result.data.tweets.get(0);
+                        }
+                        twitterApiObserver.onNext(tweet);
+                    }
 
-            @Override
-            public void failure(TwitterException exception) {
-
-            }
-        }));
+                    @Override
+                    public void failure(TwitterException exception) {
+                        twitterApiObserver.onError(null);
+                    }
+                }));
     }
 
     public void onSubscribe() {

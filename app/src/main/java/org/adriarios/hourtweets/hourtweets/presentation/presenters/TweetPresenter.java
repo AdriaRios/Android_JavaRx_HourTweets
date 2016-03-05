@@ -95,10 +95,9 @@ public class TweetPresenter {
                     public void run() {
                         try {
                             Calendar c = Calendar.getInstance();
-                            int hour = c.get(Calendar.HOUR);
                             int hour_day = c.get(Calendar.HOUR_OF_DAY);
                             String minute = utils.paddingZero(c.get(Calendar.MINUTE));
-                            String hourStr = String.valueOf(hour_day) + "::" + minute;
+                            String hourStr = String.valueOf(hour_day) + ":" + minute;
                             tweetInteractor.nextTweet(hourStr);
                         } catch (Exception e) {
                             Log.d("MY OBSERVER", "d");
@@ -108,7 +107,7 @@ public class TweetPresenter {
                 });
             }
         };
-        timer.schedule(doAsynchronousTask, 0, 5000);
+        timer.schedule(doAsynchronousTask, 0, 60000);
     }
 
 }
