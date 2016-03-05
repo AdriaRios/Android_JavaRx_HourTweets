@@ -4,6 +4,7 @@ import com.twitter.sdk.android.core.models.Tweet;
 
 import org.adriarios.hourtweets.hourtweets.data.api.ITwitterApi;
 import org.adriarios.hourtweets.hourtweets.data.storage.ITweetsStoragedManager;
+import org.adriarios.hourtweets.hourtweets.data.storage.TweetRealmObjectVO;
 import org.adriarios.hourtweets.hourtweets.di.App;
 import org.adriarios.hourtweets.hourtweets.utils.Utils;
 
@@ -35,6 +36,7 @@ public class GetTweetInteractor implements IGetTweetInteractor {
     public GetTweetInteractor(App application) {
         application.getObjectGraph().inject(this);
         initObserver();
+
     }
 
     private void initObserver() {
@@ -50,8 +52,12 @@ public class GetTweetInteractor implements IGetTweetInteractor {
 
             @Override
             public void onNext(Object response) {
-//                String type = response.getClass().getName();
-                tweetsStoragedManager.addNewTweetToLocalStorage((Tweet)response, currentTweetHour);
+                String type = response.getClass().getName();
+                if (type != "java.lang.String"){
+                    tweetsStoragedManager.addNewTweetToLocalStorage((Tweet)response, currentTweetHour);
+                }else{
+                    twitterApi.getNewTweet(currentTweetHour);
+                }
                 myObserver.onNext(response);
             }
         };
@@ -72,7 +78,8 @@ public class GetTweetInteractor implements IGetTweetInteractor {
                 twitterApi.subscribe(twitterApiObserver);
             }
         }else{
-            tweetsStoragedManager.getStoragedTweet(hourStr);
+            TweetRealmObjectVO tweetOffLine = tweetsStoragedManager.getStoragedTweet(hourStr);
+            myObserver.onNext(tweetOffLine);
         }
 
     }

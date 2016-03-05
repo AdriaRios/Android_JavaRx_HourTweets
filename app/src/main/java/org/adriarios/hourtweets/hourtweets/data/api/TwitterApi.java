@@ -50,6 +50,39 @@ public class TwitterApi implements ITwitterApi {
         return twitterApiClient != null;
     }
 
+    private TwitterApiClient getTwitterApiClient(final Subscriber<? super String> subscriber) {
+        TwitterCore.getInstance().logInGuest(new Callback<AppSession>() {
+            @Override
+            public void success(Result<AppSession> result) {
+                guestAppSession = result.data;
+                subscriber.onNext("OK"); // Emit the contents of the URL
+                subscriber.onCompleted(); // Nothing more to emit*/
+            }
+
+            @Override
+            public void failure(TwitterException exception) {
+                throw exception;
+            }
+        });
+        return twitterApiClient;
+    }
+
+    public void getNewTweet(String hourStr) {
+        twitterApiClient = TwitterCore.getInstance().getApiClient(guestAppSession);
+        twitterApiClient.getSearchService().tweets("\"" + hourStr + "\"", null, null, null, "mixed", 50, null, null, null, true, new GuestCallback<>(new Callback<Search>() {
+            @Override
+            public void success(Result<Search> result) {
+                Tweet tweet = result.data.tweets.get(0);
+                twitterApiObserver.onNext(tweet);
+            }
+
+            @Override
+            public void failure(TwitterException exception) {
+
+            }
+        }));
+    }
+
     public void onSubscribe() {
         fetchFromTwitterResponse = Observable.create(new Observable.OnSubscribe<String>() {
             @Override
@@ -71,39 +104,5 @@ public class TwitterApi implements ITwitterApi {
                 .subscribeOn(Schedulers.newThread()) // Create a new Thread
                 .observeOn(AndroidSchedulers.mainThread()) // Use the UI thread
                 .subscribe(observer);
-    }
-
-    private TwitterApiClient getTwitterApiClient(final Subscriber<? super String> subscriber) {
-        TwitterCore.getInstance().logInGuest(new Callback<AppSession>() {
-            @Override
-            public void success(Result<AppSession> result) {
-                guestAppSession = result.data;
-                subscriber.onNext("OK"); // Emit the contents of the URL
-                subscriber.onCompleted(); // Nothing more to emit*/
-            }
-
-            @Override
-            public void failure(TwitterException exception) {
-                throw exception;
-            }
-        });
-        return twitterApiClient;
-    }
-
-    public void getNewTweet(String hourStr) {
-
-        twitterApiClient = TwitterCore.getInstance().getApiClient(guestAppSession);
-        twitterApiClient.getSearchService().tweets("\"" + hourStr + "\"", null, null, null, "mixed", 50, null, null, null, true, new GuestCallback<>(new Callback<Search>() {
-            @Override
-            public void success(Result<Search> result) {
-                Tweet tweet = result.data.tweets.get(0);
-                twitterApiObserver.onNext(tweet);
-            }
-
-            @Override
-            public void failure(TwitterException exception) {
-
-            }
-        }));
     }
 }

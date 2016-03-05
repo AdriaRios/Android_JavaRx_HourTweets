@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.twitter.sdk.android.core.models.Tweet;
 
+import org.adriarios.hourtweets.hourtweets.data.storage.TweetRealmObjectVO;
 import org.adriarios.hourtweets.hourtweets.di.App;
 import org.adriarios.hourtweets.hourtweets.domain.IGetTweetInteractor;
 import org.adriarios.hourtweets.hourtweets.presentation.activities.TweetActivity;
@@ -24,18 +25,26 @@ public class TweetPresenter {
     @Inject
     IGetTweetInteractor tweetInteractor;
 
+    private static final String TWEET_ONLINE = "com.twitter.sdk.android.core.models.Tweet";
+    private static final String TWEET_OFFLINE = "io.realm.TweetRealmObjectVORealmProxy";
+
+    private TweetActivity tweetActivity;
+
 
     public TweetPresenter(App application) {
         application.getObjectGraph().inject(this);
         getTweetPerMinute();
     }
 
-    public void init(final TweetActivity tweetActivity) {
+    public void init(TweetActivity activity) {
+        tweetActivity = activity;
+        initObserver();
+    }
+
+    public void initObserver(){
         Observer<Object> myObserver = new Observer<Object>() {
             @Override
             public void onCompleted() {
-                // Called when the observable has no more data to emit
-                Log.d("MY OBSERVER", "d");
             }
 
             @Override
@@ -45,12 +54,32 @@ public class TweetPresenter {
 
             @Override
             public void onNext(Object response) {
-//                String type = response.getClass().getName();
-                tweetActivity.showTweet((Tweet) response);
+                processResponse(response);
             }
         };
         tweetInteractor.subscribe(myObserver);
     }
+
+    private void processResponse(Object response){
+        if (response == null){
+            tweetActivity.showNotFoundMessage();
+        }else{
+            checkKindOfTweet(response);
+        }
+    }
+
+    private void checkKindOfTweet(Object response){
+        String responseType = response.getClass().getName();
+        switch(responseType) {
+            case TWEET_ONLINE:
+                tweetActivity.showOnlineTweet((Tweet) response);
+                break;
+            case TWEET_OFFLINE:
+                tweetActivity.showOfflineTweet((TweetRealmObjectVO) response);
+                break;
+        }
+    }
+
 
     public void getTweetPerMinute() {
         final Handler handler = new Handler();
@@ -76,7 +105,7 @@ public class TweetPresenter {
                 });
             }
         };
-        timer.schedule(doAsynchronousTask, 0, 60000);
+        timer.schedule(doAsynchronousTask, 0, 5000);
     }
 
 }

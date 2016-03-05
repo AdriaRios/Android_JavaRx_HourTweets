@@ -1,7 +1,5 @@
 package org.adriarios.hourtweets.hourtweets.data.storage;
 
-import android.util.Log;
-
 import com.twitter.sdk.android.core.models.Tweet;
 
 import org.adriarios.hourtweets.hourtweets.di.App;
@@ -21,11 +19,16 @@ public class TweetsStoragedManager implements ITweetsStoragedManager {
         realm = Realm.getInstance(realmConfig);
     }
 
-    public void getStoragedTweet(String currentTweetHour){
-        RealmResults<TweetRealmObjectVO> tweet = realm.where(TweetRealmObjectVO.class)
+    public TweetRealmObjectVO getStoragedTweet(String currentTweetHour){
+        TweetRealmObjectVO tweet = null;
+        RealmResults<TweetRealmObjectVO> tweetResult = realm.where(TweetRealmObjectVO.class)
                 .equalTo("id", currentTweetHour)
                 .findAll();
-        Log.d("Realm result", "d");
+
+        if (tweetResult.size() > 0){
+            tweet = tweetResult.first();
+        }
+        return tweet;
     }
 
     public void addNewTweetToLocalStorage(Tweet tweet, String currentTweetHour){

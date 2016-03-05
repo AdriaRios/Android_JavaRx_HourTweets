@@ -17,7 +17,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:background="@android:color/holo_blue_bright"
-        android:id="@+id/tweetContainer" >
+        android:id="@+id/tweetOnlineContainer" >
 
         <ProgressBar
             style="?android:attr/progressBarStyleLarge"
@@ -26,84 +26,84 @@
             android:id="@+id/progressBar"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true" />
+    </RelativeLayout>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:background="@android:color/white"
-            android:id="@+id/tweetOffLineContainer"
-            android:layout_centerVertical="true"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="@android:color/white"
+        android:id="@+id/tweetOffLineContainer"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Lucía R"
+            android:id="@+id/userName"
+            android:layout_marginLeft="80dp"
+            android:layout_marginStart="80dp"
+            android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true">
+            android:layout_alignParentStart="true" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="\@iruizpe"
+            android:id="@+id/userNick"
+            android:layout_below="@+id/userName"
+            android:layout_alignLeft="@+id/userName"
+            android:layout_alignStart="@+id/userName" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Lucía R"
-                android:id="@+id/textView2"
-                android:layout_marginLeft="80dp"
-                android:layout_marginStart="80dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="\@iruizpe"
-                android:id="@+id/textView3"
-                android:layout_below="@+id/textView2"
-                android:layout_alignLeft="@+id/textView2"
-                android:layout_alignStart="@+id/textView2" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="New Textaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Textaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
                 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
                 aaaaaaaaaaaaaaaaaaaaaaaaaaa
                 iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
                 iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
                 iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii"
-                android:id="@+id/textView4"
-                android:layout_below="@+id/textView3"
-                android:layout_alignLeft="@+id/textView3"
-                android:layout_alignStart="@+id/textView3"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_above="@+id/textView5" />
+            android:id="@+id/tweetDesc"
+            android:layout_below="@+id/userNick"
+            android:layout_alignLeft="@+id/userNick"
+            android:layout_alignStart="@+id/userNick"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_above="@+id/tweetDate" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="101010101"
-                android:id="@+id/textView5"
-                android:layout_above="@+id/textView6"
-                android:layout_alignLeft="@+id/textView4"
-                android:layout_alignStart="@+id/textView4" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="101010101"
+            android:id="@+id/tweetDate"
+            android:layout_above="@+id/tweetRetweets"
+            android:layout_alignLeft="@+id/tweetDesc"
+            android:layout_alignStart="@+id/tweetDesc" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="1 Retweet"
-                android:id="@+id/textView6"
-                android:layout_alignParentBottom="true"
-                android:layout_alignLeft="@+id/textView5"
-                android:layout_alignStart="@+id/textView5" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="1 Retweet"
+            android:id="@+id/tweetRetweets"
+            android:layout_alignParentBottom="true"
+            android:layout_alignLeft="@+id/tweetDate"
+            android:layout_alignStart="@+id/tweetDate" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/imageView"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
-        </RelativeLayout>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
     </RelativeLayout>
 
 
@@ -111,8 +111,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Current Hour Tweet"
-        android:id="@+id/textView"
+        android:text="Mode OFF LINE"
+        android:id="@+id/headerText"
         android:textColor="@android:color/white"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />

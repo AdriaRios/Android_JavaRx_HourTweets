@@ -8,5 +8,5 @@ import com.twitter.sdk.android.core.models.Tweet;
 public interface ITweetsStoragedManager {
     void addNewTweetToLocalStorage(Tweet tweet, String currentTweetHour);
 
-    void getStoragedTweet(String hourStr);
+    TweetRealmObjectVO getStoragedTweet(String hourStr);
 }
