@@ -2,20 +2,27 @@
 
 ##Purpose
 
-This is an Android application that searches and shows Tweets related to the current time following the next format:
+This is an Android application that searches and shows one Tweet related to the current time following the next format:
 
   It's _time_ and _message_
+  
+The Tweet showed will be most retweeted first, newer first if they have the same retweet count
   
 The application runs in two modes:
 
   - Mode Online:
   
-    The tweet is obtained through the Twitter Api with Internet Connection, is loaded inside the App and the user can interact it opening the Twitter App with a click.
+    The tweet is obtained through the Twitter Api with Internet Connection, is loaded inside the App and the user can interact with it opening Twitter App with a click.
   
   ![alt tag](http://52.11.144.116/images/tweet_loading.png)
   ![alt tag](http://52.11.144.116/images/tweet_online.png)
   
   - Mode Offline
+  
+    The tweet is obtained through the Local Storage of the device, there is a Tweet stored previously. The user can't interact with it, only can show the information.
+
+  ![alt tag](http://52.11.144.116/images/tweet_offline.png)
+  
   
 
 
