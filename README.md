@@ -6,6 +6,17 @@ This is an Android application that searches and shows Tweets related to the cur
 
   It's _time_ and _message_
   
+The application runs in two modes:
+
+  - Mode Online:
+  
+    The tweet is obtained through the Twitter Api with Internet Connection, is loaded inside the App and the user can interact it opening the Twitter App with a click.
+  
+  ![alt tag](http://52.11.144.116/images/tweet_loading.png)
+  ![alt tag](http://52.11.144.116/images/tweet_online.png)
+  
+  - Mode Offline
+  
 
 
 ##Architecture
