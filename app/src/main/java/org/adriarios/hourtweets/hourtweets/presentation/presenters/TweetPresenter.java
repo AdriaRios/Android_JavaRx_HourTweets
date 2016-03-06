@@ -20,7 +20,11 @@ import javax.inject.Inject;
 import rx.Observer;
 
 /**
- * Created by Adrian on 02/03/2016.
+ * This is the presenter of the application. His goal is to get new tweets from the Tweets
+ * Interactor and updates de view of the application (Activity) with these new Tweets.
+ *
+ * @author Adrian
+ *
  */
 public class TweetPresenter {
     @Inject
@@ -33,17 +37,37 @@ public class TweetPresenter {
 
     private TweetActivity tweetActivity;
 
-
+    /**
+     * Contructor of the class. This method set this class as injectable and starts the interval
+     * to get tweets
+     * @param application
+     */
     public TweetPresenter(App application) {
         application.getObjectGraph().inject(this);
         getTweetPerMinute();
     }
 
+
+    /**
+     * This method storages the Activity that presenter will control in a class prop and
+     * initializes the observer.
+     * @param activity
+     */
     public void init(TweetActivity activity) {
         tweetActivity = activity;
         initObserver();
     }
 
+    /**
+     * This method initializes the observer property, subscribes the presenter to the Tweet
+     * Interactor changes. We controls two type of Messages:
+     *
+     * onError: It was an error and notify the activity that
+     * it has to show a 'not found message'
+     *
+     * onNext: There are a new tweet (if there were occurrences with the time), then process the
+     * message
+     */
     public void initObserver(){
         Observer<Object> myObserver = new Observer<Object>() {
             @Override
@@ -52,7 +76,7 @@ public class TweetPresenter {
 
             @Override
             public void onError(Throwable e) {
-                // Called when the observable encounters an error
+                tweetActivity.showNotFoundMessage();
             }
 
             @Override
@@ -63,6 +87,12 @@ public class TweetPresenter {
         tweetInteractor.subscribe(myObserver);
     }
 
+    /**
+     * This method process the message received from the Tweet Interactor. This response can be
+     * a new tweet (then check the type of new tweet) or can be null (then notify the activity that
+     * it has to show a 'not found message'
+     * @param response The objected received
+     */
     private void processResponse(Object response){
         if (response == null){
             tweetActivity.showNotFoundMessage();
@@ -71,19 +101,28 @@ public class TweetPresenter {
         }
     }
 
-    private void checkKindOfTweet(Object response){
-        String responseType = response.getClass().getName();
+    /**
+     * This method informs the activity that it has to show a new Tweet. There are two
+     * different kinds of tweet to show: Online and Offline.
+     * @param tweet The new tweet received
+     */
+    private void checkKindOfTweet(Object tweet){
+        String responseType = tweet.getClass().getName();
         switch(responseType) {
             case TWEET_ONLINE:
-                tweetActivity.showOnlineTweet((Tweet) response);
+                tweetActivity.showOnlineTweet((Tweet) tweet);
                 break;
             case TWEET_OFFLINE:
-                tweetActivity.showOfflineTweet((TweetRealmObjectVO) response);
+                tweetActivity.showOfflineTweet((TweetRealmObjectVO) tweet);
                 break;
         }
     }
 
 
+    /**
+     * This method creates an interval that gets a new tweet every minute through the
+     * Tweet Interactor.
+     */
     public void getTweetPerMinute() {
         final Handler handler = new Handler();
         Timer timer = new Timer();
@@ -100,8 +139,7 @@ public class TweetPresenter {
                             String hourStr = String.valueOf(hour_day) + ":" + minute;
                             tweetInteractor.nextTweet(hourStr);
                         } catch (Exception e) {
-                            Log.d("MY OBSERVER", "d");
-                            // TODO Auto-generated catch block
+                            Log.e("Excepcion in timer", e.toString());
                         }
                     }
                 });
