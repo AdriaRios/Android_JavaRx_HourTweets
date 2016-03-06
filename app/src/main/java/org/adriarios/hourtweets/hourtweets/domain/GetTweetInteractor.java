@@ -54,7 +54,7 @@ public class GetTweetInteractor implements IGetTweetInteractor {
      * onError: It was an error and we'll notify our subscribers (presentation layers)
      *
      * onNext: There are a new tweet (if there were occurrences with the time), then process storages
-     * this tweet in local storage and notigy our subscribers (presentation layer).
+     * this tweet in local storage and notify our subscribers (presentation layer).
      */
     private void initObserver() {
         twitterApiObserver = new Observer<Object>() {
@@ -86,7 +86,7 @@ public class GetTweetInteractor implements IGetTweetInteractor {
 
     /**
      *
-     * This method stores in a class property a subscriber of this Interactor class. It will be notifyed when
+     * This method stores in a class property a subscriber of this Interactor class. It will be notified when
      * a new tweet.
      * @param observer The observer to subscribe to this class
      */
