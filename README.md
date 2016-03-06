@@ -33,6 +33,33 @@ If there aren't any Tweets for the current hour the user will see a "No Tweets F
 
 ##Architecture
 
+The application has been designed following [The Clean Architecture](https://github.com/android10/Android-CleanArchitecture) philosophy. This philosophy stands for a group of practices that produce systems that are:
+
+- Testable
+- Independent of UI
+- Independent of Database
+- Independent of external API's
+
+As a result, the application is split of the following way:
+
+###Presentation Layer
+
+In this layer there are the logic related to Views such as rendering, it uses a MVP pattern. In the case of this app, take place the following actions:
+- Render Online Tweet.
+- Render Offline Tweet.
+- Hide/Show View elements.
+- Make calls to Domain Layer to get new Tweets.
+
+###Domain Layer
+
+In the Domain Layer, there are the business logic. This layer knows how to get, save and process information from Data Layer and has to provide it to Presentation layer. In the case of this app take place the following actions:
+
+- Get online tweet from Twitter API.
+- Get offline tweet from Local Storage.
+- Save tweets in local storage
+
+###Data Layer
+
 ##Tools
  - [RxJava /RxAndroid](https://github.com/ReactiveX/RxAndroid) 
  - [Fabric - Twitter SDK](https://fabric.io/kits/android/twitterkit/summary)
