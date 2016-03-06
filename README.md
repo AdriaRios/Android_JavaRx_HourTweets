@@ -60,10 +60,22 @@ In the Domain Layer, there are the business logic. This layer knows how to get, 
 
 ###Data Layer
 
+All data needed for the applications. In the case of this app the information can be obtained by:
+
+- Twitter API (with internet connection)
+- Local Storage (withou internet connection)
+
 ##Tools
- - [RxJava /RxAndroid](https://github.com/ReactiveX/RxAndroid) 
+ - [RxJava /RxAndroid](https://github.com/ReactiveX/RxAndroid)
  - [Fabric - Twitter SDK](https://fabric.io/kits/android/twitterkit/summary)
  - [Dagger](http://square.github.io/dagger/)
  - [Realm](https://realm.io/)
 
 ##Next Steps
+
+- Testing
+- Implementation of the repository pattern
+- Improve the style of Tweet Offline
+- More lyfecycle managment
+- More error managment 
+
