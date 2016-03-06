@@ -13,7 +13,10 @@ import javax.inject.Inject;
 import rx.Observer;
 
 /**
- * Created by Adrian on 02/03/2016.
+ * This is the Interactor of the application. His goal is to obtain data (tweets in this case) from
+ * the Data Layer (Local Storage and Twitter Api) and provide it to presentation Layer.
+ *
+ * @author Adrian
  */
 public class GetTweetInteractor implements IGetTweetInteractor {
     @Inject
@@ -26,21 +29,33 @@ public class GetTweetInteractor implements IGetTweetInteractor {
     Utils utils;
 
     private static final String STRING_TYPE = "java.lang.String";
-
     private String currentTweetHour;
 
-    //Observable property to watch TwitterApi
+    //This is the observer that are listening for the notifications of the Twitter Api
     private Observer<Object> twitterApiObserver;
 
-    //Interactors observers
+    //This is the observer subscribed to this class.
     private Observer<Object> myObserver;
 
+    /**
+     * Constructor of the class. This method set this class as injectable and call a method to
+     * initialize the twitterApiObserver
+     * @param application
+     */
     public GetTweetInteractor(App application) {
         application.getObjectGraph().inject(this);
         initObserver();
-
     }
 
+    /**
+     * This method initializes the twitter observer property, subscribes the Interactor to the Tweet
+     * Api changes. We controls two type of Messages:
+     *
+     * onError: It was an error and we'll notify our subscribers (presentation layers)
+     *
+     * onNext: There are a new tweet (if there were occurrences with the time), then process storages
+     * this tweet in local storage and notigy our subscribers (presentation layer).
+     */
     private void initObserver() {
         twitterApiObserver = new Observer<Object>() {
             @Override
@@ -69,26 +84,51 @@ public class GetTweetInteractor implements IGetTweetInteractor {
         };
     }
 
+    /**
+     *
+     * This method stores in a class property a subscriber of this Interactor class. It will be notifyed when
+     * a new tweet.
+     * @param observer The observer to subscribe to this class
+     */
     public void subscribe(Observer<Object> observer) {
         myObserver = observer;
     }
 
+    /**
+     * This method get the next Tweet. If the Network is avaiable the tweet will be take from
+     * TwitterApi, otherwhise from local storage
+     * @param hourStr The current hour get the Tweet
+     */
     @Override
     public void nextTweet(String hourStr) {
-        //hourStr = "10:00";
-        //hourStr = "14:44";
         currentTweetHour = hourStr;
         if (utils.isNetworkAvailable()) {
-            if (twitterApi.isTwitterApiInitialized()) {
-                twitterApi.getNewTweet(hourStr);
-            } else {
-                twitterApi.initApi();
-                twitterApi.subscribe(twitterApiObserver);
-            }
+            getTweetFromTwitterApi(hourStr);
         } else {
-            TweetRealmObjectVO tweetOffLine = tweetsStoragedManager.getStoragedTweet(hourStr);
-            myObserver.onNext(tweetOffLine);
+            getTweetFromLocalStorage(hourStr);
         }
 
+    }
+
+    /**
+     * This method get a new tweet from Twitter API
+     * @param hourStr The current hour get the Tweet
+     */
+    public void getTweetFromTwitterApi(String hourStr){
+        if (twitterApi.isTwitterApiInitialized()) {
+            twitterApi.getNewTweet(hourStr);
+        } else {
+            twitterApi.initApi();
+            twitterApi.subscribe(twitterApiObserver);
+        }
+    }
+
+    /**
+     * This method get a new tweet from Local Storage
+     * @param hourStr The current hour get the Tweet
+     */
+    public void getTweetFromLocalStorage(String hourStr){
+        TweetRealmObjectVO tweetOffLine = tweetsStoragedManager.getStoragedTweet(hourStr);
+        myObserver.onNext(tweetOffLine);
     }
 }

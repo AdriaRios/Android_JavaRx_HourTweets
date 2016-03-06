@@ -11,7 +11,6 @@ import org.adriarios.hourtweets.hourtweets.domain.IGetTweetInteractor;
 import org.adriarios.hourtweets.hourtweets.presentation.activities.TweetActivity;
 import org.adriarios.hourtweets.hourtweets.utils.Utils;
 
-import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -69,7 +68,7 @@ public class TweetPresenter {
      * message
      */
     public void initObserver(){
-        Observer<Object> myObserver = new Observer<Object>() {
+        Observer<Object> observer = new Observer<Object>() {
             @Override
             public void onCompleted() {
             }
@@ -84,7 +83,33 @@ public class TweetPresenter {
                 processResponse(response);
             }
         };
-        tweetInteractor.subscribe(myObserver);
+        tweetInteractor.subscribe(observer);
+    }
+
+    /**
+     * This method creates an interval that gets a new tweet every minute through the
+     * Tweet Interactor.
+     */
+    public void getTweetPerMinute() {
+        final Handler handler = new Handler();
+        Timer timer = new Timer();
+        TimerTask doAsynchronousTask = new TimerTask() {
+            @Override
+            public void run() {
+                handler.post(new Runnable() {
+                    @SuppressWarnings("unchecked")
+                    public void run() {
+                        try {
+                            String hourStr = utils.getCurrentHour();
+                            tweetInteractor.nextTweet(hourStr);
+                        } catch (Exception e) {
+                            Log.e("Excepcion in timer", e.toString());
+                        }
+                    }
+                });
+            }
+        };
+        timer.schedule(doAsynchronousTask, 0, 60000);
     }
 
     /**
@@ -116,36 +141,6 @@ public class TweetPresenter {
                 tweetActivity.showOfflineTweet((TweetRealmObjectVO) tweet);
                 break;
         }
-    }
-
-
-    /**
-     * This method creates an interval that gets a new tweet every minute through the
-     * Tweet Interactor.
-     */
-    public void getTweetPerMinute() {
-        final Handler handler = new Handler();
-        Timer timer = new Timer();
-        TimerTask doAsynchronousTask = new TimerTask() {
-            @Override
-            public void run() {
-                handler.post(new Runnable() {
-                    @SuppressWarnings("unchecked")
-                    public void run() {
-                        try {
-                            Calendar c = Calendar.getInstance();
-                            int hour_day = c.get(Calendar.HOUR_OF_DAY);
-                            String minute = utils.paddingZero(c.get(Calendar.MINUTE));
-                            String hourStr = String.valueOf(hour_day) + ":" + minute;
-                            tweetInteractor.nextTweet(hourStr);
-                        } catch (Exception e) {
-                            Log.e("Excepcion in timer", e.toString());
-                        }
-                    }
-                });
-            }
-        };
-        timer.schedule(doAsynchronousTask, 0, 60000);
     }
 
 }

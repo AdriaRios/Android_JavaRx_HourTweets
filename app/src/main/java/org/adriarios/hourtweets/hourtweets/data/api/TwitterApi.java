@@ -71,7 +71,6 @@ public class TwitterApi implements ITwitterApi {
 
     public void getNewTweet(String hourStr) {
         String query = "\"It's " + hourStr + " and\"";
-        //String query = hourStr;
         twitterApiClient = TwitterCore.getInstance().getApiClient(guestAppSession);
         twitterApiClient.getSearchService().tweets(
                 query, null, null, null, "mixed", 50, null, null, null, true, new GuestCallback<>(new Callback<Search>() {
